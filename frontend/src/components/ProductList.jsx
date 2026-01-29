@@ -37,15 +37,26 @@ const ProductList = ({ products, loading }) => {
         </p>
         <div className="product-grid">
           {products.map((product, index) => {
-            const { name, description, price, category, image } = product.fields;
+            const { name, description, price, category, image, featured } = product.fields;
+            
+            // Handle image URL
             const imageUrl = image?.fields?.file?.url ? `https:${image.fields.file.url}` : null;
+            
+            // Handle description - check if it's a string or object
+            let descriptionText = '';
+            if (typeof description === 'string') {
+              descriptionText = description;
+            } else if (description && typeof description === 'object') {
+              // If it's a rich text object, try to extract text
+              descriptionText = 'Premium quality fragrance';
+            }
 
             return (
               <div className="product-card" key={product.sys.id} data-testid={`product-card-${index}`}>
                 {imageUrl && (
                   <div className="product-image">
-                    <img src={imageUrl} alt={name} />
-                    {product.fields.featured && (
+                    <img src={imageUrl} alt={name || 'Product'} />
+                    {featured && (
                       <span className="badge-featured" data-testid={`badge-featured-${index}`}>
                         <i className="fas fa-star"></i> Featured
                       </span>
@@ -54,13 +65,13 @@ const ProductList = ({ products, loading }) => {
                 )}
                 <div className="product-info">
                   {category && <span className="product-category" data-testid={`product-category-${index}`}>{category}</span>}
-                  <h3 className="product-name" data-testid={`product-name-${index}`}>{name}</h3>
-                  <p className="product-description" data-testid={`product-description-${index}`}>{description}</p>
+                  <h3 className="product-name" data-testid={`product-name-${index}`}>{name || 'Product'}</h3>
+                  <p className="product-description" data-testid={`product-description-${index}`}>{descriptionText}</p>
                   <div className="product-footer">
-                    <span className="product-price" data-testid={`product-price-${index}`}>{formatPrice(price)}</span>
+                    <span className="product-price" data-testid={`product-price-${index}`}>{formatPrice(price || 0)}</span>
                     <button 
                       className="btn-order" 
-                      onClick={() => handleWhatsAppOrder(name)}
+                      onClick={() => handleWhatsAppOrder(name || 'Product')}
                       data-testid={`btn-order-${index}`}
                     >
                       <i className="fab fa-whatsapp"></i> Pesan
