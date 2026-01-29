@@ -40,7 +40,7 @@ const ProductList = ({ products, loading }) => {
             const { name, description, price, category, image, featured } = product.fields;
             
             // Handle image URL
-            const imageUrl = image?.fields?.file?.url ? `https:${image.fields.file.url}` : null;
+            const imageUrl = image? image : null;
             
             // Handle description - check if it's a string or object
             let descriptionText = '';
